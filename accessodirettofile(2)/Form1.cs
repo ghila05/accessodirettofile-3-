@@ -20,11 +20,13 @@ namespace accessodirettofile_2_
         public string filename = "veneto_verona.csv";
         private void button1_Click(object sender, EventArgs e)
         {
-            string cerca = textBox1_ingresso.Text;
-
+            string cerca = textBox1_ingresso.Text.ToUpper();
 
             Ricerca(filename, cerca);
 
+            
+
+            
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -35,58 +37,52 @@ namespace accessodirettofile_2_
         static string Ricerca(string filename, string nomecercato)
         {
             string line="";
-            var f = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite);
+            var f = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite);// accesso al file binario 
             BinaryReader reader = new BinaryReader(f);
             BinaryWriter writer = new BinaryWriter(f);
 
 
-            int ciao = Convert.ToInt32(f.Length);
-            ciao = ciao / 528;
+            int righetot = Convert.ToInt32(f.Length);
+            righetot = righetot / 528;
             line += Encoding.ASCII.GetString(reader.ReadBytes(528));
-            MessageBox.Show(Convert.ToString(ciao));//righe totali 
+            line = FromString(line);
+
+            myCompare(line, nomecercato);
+
             MessageBox.Show(line);
-
-
-
-            return "ciao";
+            f.Close();
+            return line;
+           
         }
-        static int binarySearch(int[] arr, int sx, int rx, int x)
+
+        static int myCompare(string stringa1, string stringa2) // gentilmente presa da Marco Borelli
         {
-            if (rx >= sx)
+            if (stringa1 == stringa2)//0=sono uguali 1=stringa viene prima -1=stringa viene dopo
+                return 0;
+
+            char[] char1 = stringa1.ToCharArray();
+            char[] char2 = stringa2.ToCharArray();
+            int l = char1.Length;
+            if (char2.Length < l)//in l c'è la lunghezza più piccola
+                l = char2.Length;
+
+            for (int i = 0; i < l; i++)
             {
-                int mid = sx + (rx - sx) / 2;
-
-                if (arr[mid] == x)
-                {
-                    return mid;
-                }
-
-                if (arr[mid] > x)
-                {
-                    return binarySearch(arr, sx, mid - 1, x);
-                }
-
-                return binarySearch(arr, mid + 1, rx, x);
+                if (char1[i] < char2[i])
+                    return -1;
+                if (char1[i] > char2[i])
+                    return 1;
             }
 
-            return -1;
+            return 0;//visto che qui non mi interessa lunghezza allora mi basta che la prima parte si uguale
         }
 
 
-        static void StringSplit(string line)
+
+        public static string FromString(string Stringa, string sep = ";", int pos = 8)//funzione che da una stringa separa i campi e ritorna una stringa
         {
-            string separatore = ";";
-
-            line.Split(separatore);
-
-        }
-
-        public static string FromString(string votoStringa, string sep = ";")//funzione che da una stringa separa i campi e ritorna una struct associata a i campi di essa
-        {
-            string[] ris = votoStringa.Split(';');
-
-            return ris[8];
-            
+            string[] ris = Stringa.Split(';');
+            return ris[pos];
             
         }
     }
