@@ -43,11 +43,54 @@ namespace accessodirettofile_2_
 
 
             int righetot = Convert.ToInt32(f.Length);
-            righetot = righetot / 528;
-            line += Encoding.ASCII.GetString(reader.ReadBytes(528));
-            line = FromString(line);
+           
+           // f.Position = (righetot);
+            //line += Encoding.ASCII.GetString(reader.ReadBytes(528));
+            //line = FromString(line);
 
-            myCompare(line, nomecercato);
+
+            int lunghezzariga = 528;
+            righetot = righetot / 528;
+
+            
+
+           
+
+
+            int lung =Convert.ToInt32(f.Length);
+            int i = 0, j = righetot - 1, m, pos = -1;
+
+            do
+            {
+                m = (i + j) / 2;
+                f.Seek(m * lunghezzariga, SeekOrigin.Begin);
+                line += Encoding.ASCII.GetString(reader.ReadBytes(lunghezzariga));
+                line = FromString(line);
+
+                if (line == nomecercato)
+                {
+                    pos = m;
+                }
+                else if (myCompare(line, nomecercato) == -1)
+                {
+                    i = m + 1;
+                }
+                else
+                    j = m - 1;
+               
+
+            } while (i <= j && pos == -1);
+
+            if (pos != -1)
+                MessageBox.Show("campo trovato in posizione: " + pos);
+            else
+                MessageBox.Show("campo non trovato");
+
+
+
+
+
+
 
             MessageBox.Show(line);
             f.Close();
@@ -79,7 +122,7 @@ namespace accessodirettofile_2_
 
 
 
-        public static string FromString(string Stringa, string sep = ";", int pos = 8)//funzione che da una stringa separa i campi e ritorna una stringa
+        public static string FromString(string Stringa, string sep = ";", int pos = 0)//funzione che da una stringa separa i campi e ritorna una stringa
         {
             string[] ris = Stringa.Split(';');
             return ris[pos];
