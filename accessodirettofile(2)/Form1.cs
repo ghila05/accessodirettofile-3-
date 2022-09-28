@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace accessodirettofile_2_
 {
-    public partial class Form1 : Form
+    public partial class File_scraping : Form
     {
-        public Form1()
+        public File_scraping()
         {
             InitializeComponent();
         }
@@ -21,11 +21,7 @@ namespace accessodirettofile_2_
         private void button1_Click(object sender, EventArgs e)
         {
             string cerca = textBox1_ingresso.Text.ToUpper();
-
-            Ricerca(filename, cerca);
-
-            
-
+            label_nome.Text = ("nome: "+Ricerca(filename, cerca));
             
         }
 
@@ -40,21 +36,16 @@ namespace accessodirettofile_2_
             var f = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite);// accesso al file binario 
             BinaryReader reader = new BinaryReader(f);
             BinaryWriter writer = new BinaryWriter(f);
-
-
-            int righetot = Convert.ToInt32(f.Length);
+            int righetot = Convert.ToInt32(f.Length);//byte totali
             int lunghezzariga = 528;
-            righetot /= 528;
-
-
+            righetot /= 528; // per ottenere il numero di righe 
 
             string result = "";
-
 
             int lung =Convert.ToInt32(f.Length);
             int i = 0, j = righetot - 1, m, pos = -1;
 
-            do
+            do // RICERCA DICOTOMICA
             {
                 m = (i + j) / 2;
                 f.Seek(m * lunghezzariga, SeekOrigin.Begin);
@@ -78,15 +69,8 @@ namespace accessodirettofile_2_
             if (pos != -1)
                 MessageBox.Show("campo trovato in posizione: " + pos);
             else
-                MessageBox.Show("campo non trovato");
-
-
-
-            string fine = FromString(line,8);
-
-
-
-            MessageBox.Show(fine);
+            throw new Exception("campo non trovato");
+            string fine = FromString(line,7);
             f.Close();
             return fine;
            
