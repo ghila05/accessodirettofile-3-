@@ -43,18 +43,12 @@ namespace accessodirettofile_2_
 
 
             int righetot = Convert.ToInt32(f.Length);
-           
-           // f.Position = (righetot);
-            //line += Encoding.ASCII.GetString(reader.ReadBytes(528));
-            //line = FromString(line);
-
-
             int lunghezzariga = 528;
-            righetot = righetot / 528;
+            righetot /= 528;
 
-            
 
-           
+
+            string result = "";
 
 
             int lung =Convert.ToInt32(f.Length);
@@ -64,14 +58,14 @@ namespace accessodirettofile_2_
             {
                 m = (i + j) / 2;
                 f.Seek(m * lunghezzariga, SeekOrigin.Begin);
-                line += Encoding.ASCII.GetString(reader.ReadBytes(lunghezzariga));
-                line = FromString(line);
+                line = Encoding.ASCII.GetString(reader.ReadBytes(lunghezzariga));
+                result = FromString(line,0);
 
-                if (line == nomecercato)
+                if (myCompare(result,nomecercato)==0)
                 {
                     pos = m;
                 }
-                else if (myCompare(line, nomecercato) == -1)
+                else if (myCompare(result, nomecercato) == -1)
                 {
                     i = m + 1;
                 }
@@ -88,17 +82,17 @@ namespace accessodirettofile_2_
 
 
 
+            string fine = FromString(line,8);
 
 
 
-
-            MessageBox.Show(line);
+            MessageBox.Show(fine);
             f.Close();
-            return line;
+            return fine;
            
         }
 
-        static int myCompare(string stringa1, string stringa2) // gentilmente presa da Marco Borelli
+        static int myCompare(string stringa1, string stringa2) 
         {
             if (stringa1 == stringa2)//0=sono uguali 1=stringa viene prima -1=stringa viene dopo
                 return 0;
@@ -122,7 +116,7 @@ namespace accessodirettofile_2_
 
 
 
-        public static string FromString(string Stringa, string sep = ";", int pos = 0)//funzione che da una stringa separa i campi e ritorna una stringa
+        public static string FromString(string Stringa, int pos, string sep = ";")//funzione che da una stringa separa i campi e ritorna una stringa
         {
             string[] ris = Stringa.Split(';');
             return ris[pos];
