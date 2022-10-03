@@ -18,11 +18,14 @@ namespace accessodirettofile_2_
             InitializeComponent();
         }
         public string filename = "veneto_verona.csv";
+        public string campo = ""; //variabile che poi passo per riferimento  
         private void button1_Click(object sender, EventArgs e)
         {
             string cerca = textBox1_ingresso.Text.ToUpper();
-            label_nome.Text = ("nome: "+Ricerca(filename, cerca));
-            
+            label_nome.Text = ("posizione: "+ Convert.ToString(Ricerca(filename, cerca, ref campo)));
+            labelnom.Text = ("nome: "+campo );
+
+
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -30,7 +33,7 @@ namespace accessodirettofile_2_
 
         }
 
-        static string Ricerca(string filename, string nomecercato)
+        public static int  Ricerca(string filename, string nomecercato, ref string helo)
         {
             string line="";
             var f = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite);// accesso al file binario 
@@ -70,11 +73,18 @@ namespace accessodirettofile_2_
                 MessageBox.Show("campo trovato in posizione: " + pos);
             else
             throw new Exception("campo non trovato");
+
+
             string fine = FromString(line,7);
+           
             f.Close();
-            return fine;
+            helo = result;
+            
+            return pos+1;
            
         }
+
+
 
         static int myCompare(string stringa1, string stringa2) 
         {
